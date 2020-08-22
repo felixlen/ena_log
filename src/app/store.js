@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import diagnosisKeysReducer from '../features/diagnosisKeysSlice';
 
 export default configureStore({
   reducer: {
-    counter: counterReducer,
+    diagnosisKeys: diagnosisKeysReducer,
   },
 });

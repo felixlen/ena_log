@@ -37,3 +37,21 @@
     transform: translateY(0px)
   }
 }
+
+.dropzone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0px;
+  border-width: 1px;
+  border-radius: 1px;
+  border-style: dashed;
+  border-color: silver;
+  padding: 1rem;
+  outline: none;
+}
+
+.mainRow {
+  margin-top: 1rem;
+}
