@@ -74,16 +74,13 @@ const DiagnosisKeys = () => {
                         sorted_hashes_and_dates.map( hd => {
                             const hash = hd[0]
                             const date = hd[1]
-                            console.log(exposures[hash])
-                            
                             return (
                                 <div>
                                     <Row className='mt-4'>
-                                        <Col>Schlüsseldatei vom {date}:</Col>
+                                        <Col>Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln:</Col>
                                     </Row>
                                     {
                                         exposures[hash].matches.map( m => {
-                                            console.log(m)
                                             return (
                                                 <Row>
                                                     <Col className='ml-5'>{m.count} {m.count == 1 ? 'Begegnung' : 'Begegnungen'} bei Überprüfung am {m.timestamp}</Col>
