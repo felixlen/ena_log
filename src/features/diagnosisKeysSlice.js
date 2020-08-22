@@ -35,6 +35,12 @@ export const diagnosisKeysSlice = createSlice({
     enastatus: 'uninitialized',
     exposures: {}
   },
+  reducers: {
+    resetENA(state, action) {
+      state.exposures = {}
+      state.enastatus = 'uninitialized'
+    }
+  },
   extraReducers: {
     [fetchKeys.pending]: (state, action) => { state.status = 'loading' },
     [fetchKeys.fulfilled]: (state, action) => {
@@ -73,5 +79,6 @@ export const diagnosisKeysSlice = createSlice({
   }
 })
 
-export { fetchKeys, readENALog }
+const { resetENA } = diagnosisKeysSlice.actions
+export { fetchKeys, readENALog, resetENA }
 export default diagnosisKeysSlice.reducer

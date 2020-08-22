@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchKeys, readENALog } from './diagnosisKeysSlice'
 import { useDropzone } from 'react-dropzone'
-import '../App.css';
+import '../App.css'
 
 const DiagnosisKeys = () => {
 
