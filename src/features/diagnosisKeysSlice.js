@@ -47,15 +47,23 @@ export const diagnosisKeysSlice = createSlice({
       const payload_json = JSON.parse(action.payload)
       const is_ios = 'DeviceProductType' in payload_json
       const exposures = is_ios ? payload_json.ExposureChecks : payload_json
+      // loop twice through exposure: first time to get all hashes, second time to get all matches
+      // rationale: also report 0 matches for a file where matches have been reported at another check instance
       exposures.map( e => {
         const matchCount = is_ios ? e.MatchCount : e.matchesCount
         if (matchCount > 0) {
           const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
-          const keysInFileCount = is_ios ? e.RandomIDCount : e.keyCount
-          const timestamp = is_ios ? e.Timestamp : e.timestamp
           if( !(hash in state.exposures) ) {
+            const keysInFileCount = is_ios ? e.RandomIDCount : e.keyCount
             state.exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
           }
+        }
+      })
+      exposures.map( e => {
+        const matchCount = is_ios ? e.MatchCount : e.matchesCount
+        const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
+        if (matchCount > 0 || hash in state.exposures) {
+          const timestamp = is_ios ? e.Timestamp : e.timestamp
           state.exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
         }
       })

@@ -83,7 +83,7 @@ const DiagnosisKeys = () => {
                                         exposures[hash].matches.map( m => {
                                             return (
                                                 <Row>
-                                                    <Col className='ml-5'>{m.count} {m.count == 1 ? 'Begegnung' : 'Begegnungen'} bei Überprüfung am {m.timestamp}</Col>
+                                                    <Col className='ml-5'>{m.count} Treffer bei Überprüfung am {m.timestamp}</Col>
                                                 </Row>
                                             )
                                         })
