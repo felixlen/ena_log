@@ -4,7 +4,7 @@ import axios from 'axios'
 const fetchKeys = createAsyncThunk(
   'fetchKeys',
   async () => {
-    const response = await axios.get('https://cors-anywhere.herokuapp.com/https://ctt.pfstr.de/json/filehashes.json')
+    const response = await axios.get('https://ctt.pfstr.de/json/filehashes.json')
     return response.data
   }
 )
