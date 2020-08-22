@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useRef } from 'react'
 import Spinner from 'react-bootstrap/Spinner'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Table from 'react-bootstrap/Table'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchKeys, readENALog } from './diagnosisKeysSlice'
 import { useDropzone } from 'react-dropzone'
@@ -79,15 +80,24 @@ const DiagnosisKeys = () => {
                                     <Row className='mt-4'>
                                         <Col>Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln:</Col>
                                     </Row>
-                                    {
-                                        exposures[hash].matches.map( m => {
-                                            return (
-                                                <Row>
-                                                    <Col className='ml-5'>{m.count} Treffer bei Überprüfung am {m.timestamp}</Col>
-                                                </Row>
-                                            )
-                                        })
-                                    }
+                                    <Table className='ml-4 mt-2' striped bordered size="sm">
+                                        <thead>
+                                            <th>Anzahl Treffer</th>
+                                            <th>Überprüfungszeitpunkt</th>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                exposures[hash].matches.map( m => {
+                                                    return (
+                                                        <tr>
+                                                            <td>{m.count}</td>
+                                                            <td>{m.timestamp}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </Table>
                                 </div>
                             )
                         })
