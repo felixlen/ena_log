@@ -84,7 +84,7 @@ const DiagnosisKeys = () => {
                                     <Row className='mt-4'>
                                         <Col>Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln:</Col>
                                     </Row>
-                                    <Table className='ml-4 mt-2' striped bordered size="sm">
+                                    <Table className='mt-2' striped bordered size="sm">
                                         <thead>
                                             <th>Anzahl Treffer</th>
                                             <th>Überprüfungszeitpunkt</th>

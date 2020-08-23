@@ -54,15 +54,16 @@ export const diagnosisKeysSlice = createSlice({
       const payload_json = JSON.parse(action.payload)
       const is_ios = 'DeviceProductType' in payload_json
       const exposures = is_ios ? payload_json.ExposureChecks : payload_json
+      const filtered_exposures = {}
       // loop twice through exposure: first time to get all hashes, second time to get all matches
       // rationale: also report 0 matches for a file where matches have been reported at another check instance
       exposures.map( e => {
         const matchCount = is_ios ? e.MatchCount : e.matchesCount
         if (matchCount > 0) {
           const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
-          if( !(hash in state.exposures) ) {
+          if( !(hash in filtered_exposures) ) {
             const keysInFileCount = is_ios ? e.RandomIDCount : e.keyCount
-            state.exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
+            filtered_exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
           }
         }
       })
@@ -71,8 +72,12 @@ export const diagnosisKeysSlice = createSlice({
         const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
         if (matchCount > 0 || hash in state.exposures) {
           const timestamp = is_ios ? DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO() : DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
-          state.exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
+          filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
         }
+      })
+      Object.entries(filtered_exposures).map( ([hash, exp]) => {
+        exp.matches = exp.matches.sort( (a,b) => {return a.timestamp > b.timestamp ? 1 : -1})
+        state.exposures[hash] = exp
       })
       state.enastatus = 'loaded'
     },
