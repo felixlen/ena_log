@@ -48,7 +48,7 @@ const DiagnosisKeys = () => {
         return (
             <Row className='mainRow'>
                 <Col>
-                    <p>Ein Fehler ist beim Laden der Diagnoseschlüsselinformationen aufgetreten.</p>
+                    <p>Beim Laden der Diagnoseschlüsselinformationen ist ein Fehler aufgetreten.</p>
                 </Col>
             </Row>
         )
@@ -60,16 +60,19 @@ const DiagnosisKeys = () => {
                     {enastatus === 'uninitialized' &&
                         <div {...getRootProps({ className: 'dropzone' })}>
                             <input {...getInputProps()} />
-                                <p>Um Begegnungsdateien zu analysieren, klicken oder ziehen.</p>
+                                <p>Um Begegnungsüberprüfungsdatei zu analysieren, klicken oder ziehen.</p>
                         </div>
                     }
                     {enastatus === 'loading' &&
                         <Spinner animation="border" role="status">
-                            <span className="sr-only">Lade Begegnungslog...</span>
+                            <span className="sr-only">Lade Begegnungsüberprüfungsdatei</span>
                         </Spinner>
                     }
+                    { enastatus === 'error' &&
+                        <p>Beim Laden der Begegnungsüberprüfungen ist ein Fehler aufgetreten.</p>
+                    }
                     { enastatus === 'loaded' && sorted_hashes_and_dates.length === 0 &&
-                        <p>Es sind keine Begegnungen mit positiv getester Person in der Log-Datei gespeichert.</p>
+                        <p>Bei Begegnungsüberprüfungen wurden keine Treffer mit positiv getester Person gefunden.</p>
                     }
                     { enastatus === 'loaded' && sorted_hashes_and_dates.length > 0 &&
                         sorted_hashes_and_dates.map( hd => {
