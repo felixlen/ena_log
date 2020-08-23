@@ -70,7 +70,7 @@ export const diagnosisKeysSlice = createSlice({
         const matchCount = is_ios ? e.MatchCount : e.matchesCount
         const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
         if (matchCount > 0 || hash in state.exposures) {
-          const timestamp = is_ios ? e.Timestamp : e.timestamp
+          const timestamp = is_ios ? DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO() : DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
           state.exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
         }
       })

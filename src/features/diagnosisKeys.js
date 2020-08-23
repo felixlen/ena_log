@@ -56,7 +56,7 @@ const DiagnosisKeys = () => {
     }
     else {
         return (
-            <Row className='mainRow'>
+            <Row>
                 <Col>
                     {enastatus === 'uninitialized' &&
                         <div {...getRootProps({ className: 'dropzone' })}>
@@ -78,7 +78,7 @@ const DiagnosisKeys = () => {
                     { enastatus === 'loaded' && sorted_hashes_and_dates.length > 0 &&
                         sorted_hashes_and_dates.map( hd => {
                             const hash = hd[0]
-                            const date = DateTime.fromISO(hd[1]).toLocaleString(DateTime.DATE_SHORT)
+                            const date = DateTime.fromISO(hd[1]).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
                             return (
                                 <div>
                                     <Row className='mt-4'>
@@ -92,10 +92,11 @@ const DiagnosisKeys = () => {
                                         <tbody>
                                             {
                                                 exposures[hash].matches.map( m => {
+                                                    const checkDate = DateTime.fromISO(m.timestamp).toLocaleString(DateTime.DATETIME_SHORT)
                                                     return (
                                                         <tr>
                                                             <td>{m.count}</td>
-                                                            <td>{m.timestamp}</td>
+                                                            <td>{checkDate}</td>
                                                         </tr>
                                                     )
                                                 })
