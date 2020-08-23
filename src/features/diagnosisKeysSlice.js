@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'
+const { DateTime } = require("luxon");
 
 const fetchKeys = createAsyncThunk(
   'fetchKeys',
@@ -30,7 +31,7 @@ const readENALog = createAsyncThunk(
 export const diagnosisKeysSlice = createSlice({
   name: 'diagnosisKeys',
   initialState: {
-    keys: [],
+    keys: {},
     status: 'uninitialized',
     enastatus: 'uninitialized',
     exposures: {}

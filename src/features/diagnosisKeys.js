@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fetchKeys, readENALog } from './diagnosisKeysSlice'
 import { useDropzone } from 'react-dropzone'
 import '../App.css'
+const { DateTime } = require("luxon");
 
 const DiagnosisKeys = () => {
 
@@ -77,7 +78,7 @@ const DiagnosisKeys = () => {
                     { enastatus === 'loaded' && sorted_hashes_and_dates.length > 0 &&
                         sorted_hashes_and_dates.map( hd => {
                             const hash = hd[0]
-                            const date = hd[1]
+                            const date = DateTime.fromISO(hd[1]).toLocaleString(DateTime.DATE_SHORT)
                             return (
                                 <div>
                                     <Row className='mt-4'>
