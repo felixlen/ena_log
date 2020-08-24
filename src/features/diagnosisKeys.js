@@ -3,6 +3,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Table from 'react-bootstrap/Table'
+import Card from 'react-bootstrap/Card'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchKeys, readENALog } from './diagnosisKeysSlice'
 import { useDropzone } from 'react-dropzone'
@@ -36,7 +37,7 @@ const DiagnosisKeys = () => {
 
     if (status === 'loading' || status === 'uninitialized') {
         return (
-            <Row className='mainRow'>
+            <Row className="mt-2">
                 <Col>
                     <Spinner animation="border" role="status">
                         <span className="sr-only">Lade Diagnoseschlüssel...</span>
@@ -47,7 +48,7 @@ const DiagnosisKeys = () => {
     }
     else if (status === 'error') {
         return (
-            <Row className='mainRow'>
+            <Row className="mt-2">
                 <Col>
                     <p>Beim Laden der Diagnoseschlüsselinformationen ist ein Fehler aufgetreten.</p>
                 </Col>
@@ -56,7 +57,7 @@ const DiagnosisKeys = () => {
     }
     else {
         return (
-            <Row>
+            <Row className="mt-2">
                 <Col>
                     {enastatus === 'uninitialized' &&
                         <div {...getRootProps({ className: 'dropzone' })}>
@@ -80,30 +81,32 @@ const DiagnosisKeys = () => {
                             const hash = hd[0]
                             const date = DateTime.fromISO(hd[1]).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
                             return (
-                                <div>
-                                    <Row className='mt-4'>
-                                        <Col>Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln:</Col>
-                                    </Row>
-                                    <Table className='mt-2' striped bordered size="sm">
-                                        <thead>
-                                            <th>Anzahl Treffer</th>
-                                            <th>Überprüfungszeitpunkt</th>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                exposures[hash].matches.map( m => {
-                                                    const checkDate = DateTime.fromISO(m.timestamp).toLocaleString(DateTime.DATETIME_SHORT)
-                                                    return (
-                                                        <tr>
-                                                            <td>{m.count}</td>
-                                                            <td>{checkDate}</td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </Table>
-                                </div>
+                                <Card className="mb-2">
+                                    <Card.Header>
+                                        Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln
+                                    </Card.Header>
+                                    <Card.Body>
+                                        <Table striped bordered size="sm">
+                                            <thead>
+                                                <th>Anzahl Treffer</th>
+                                                <th>Überprüfungszeitpunkt</th>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    exposures[hash].matches.map( m => {
+                                                        const checkDate = DateTime.fromISO(m.timestamp).toLocaleString(DateTime.DATETIME_SHORT)
+                                                        return (
+                                                            <tr>
+                                                                <td>{m.count}</td>
+                                                                <td>{checkDate}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </Table>
+                                    </Card.Body>
+                                </Card>
                             )
                         })
                     }
