@@ -68,6 +68,15 @@ const faq_entries = [
                 <li>ganz nach unten scrollen</li>
                 <li>Begegnungsüberprüfungen exportieren</li>
             </ul>
+            <h4>Bei Android Geräten</h4>
+            <ul>
+                <li>Einstellungen</li>
+                <li>Google</li>
+                <li>COVID19-Benachrichtigungen</li>
+                <li>Überprüfung auf mögliche Begegnungen</li>
+                <li>Authentifizieren Sie sich</li>
+                <li>Exportieren</li>
+            </ul>
         </div>
     },
     {
