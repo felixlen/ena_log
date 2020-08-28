@@ -71,7 +71,16 @@ export const diagnosisKeysSlice = createSlice({
         const matchCount = is_ios ? e.MatchCount : e.matchesCount
         const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
         if (matchCount > 0 || hash in filtered_exposures) {
-          const timestamp = is_ios ? DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO() : DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
+          let timestamp = null
+          if(is_ios) {
+            timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO()
+          } else {
+            if (e.timestamp.includes('.')) {
+              timestamp = DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
+            } else {
+              timestamp = DateTime.fromFormat(e.timestamp, "dd LLLL yyyy, HH:mm").toISO()
+            }
+          }
           filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
         }
       })
