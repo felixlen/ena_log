@@ -84,7 +84,7 @@ export const diagnosisKeysSlice = createSlice({
               if (e.timestamp.includes('.')) {
                 timestamp = DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
               } else {
-                timestamp = DateTime.fromFormat(e.timestamp, "dd LLLL yyyy, HH:mm").toISO()
+                timestamp = DateTime.fromFormat(e.timestamp, "d LLLL yyyy, HH:mm").toISO()
               }
             }
             filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
