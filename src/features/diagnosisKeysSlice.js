@@ -53,36 +53,43 @@ export const diagnosisKeysSlice = createSlice({
     [readENALog.fulfilled]: (state, action) => {
       const payload_json = JSON.parse(action.payload)
       const is_ios = 'DeviceProductType' in payload_json
+      const exportVersion = is_ios ? payload_json.ExportVersion : 1
       const exposures = is_ios ? payload_json.ExposureChecks : payload_json
       const filtered_exposures = {}
       // loop twice through exposure: first time to get all hashes, second time to get all matches
       // rationale: also report 0 matches for a file where matches have been reported at another check instance
       exposures.map( e => {
-        const matchCount = is_ios ? e.MatchCount : e.matchesCount
-        if (matchCount > 0) {
-          const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
-          if( !(hash in filtered_exposures) ) {
-            const keysInFileCount = is_ios ? e.RandomIDCount : e.keyCount
-            filtered_exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
-          }
-        }
-      })
-      exposures.map( e => {
-        const matchCount = is_ios ? e.MatchCount : e.matchesCount
-        const hash = is_ios ? e.Hash.toLowerCase() : Buffer.from(e.hash, 'base64').toString('hex').toLowerCase()
-        if (matchCount > 0 || hash in filtered_exposures) {
-          let timestamp = null
-          if(is_ios) {
-            timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO()
-          } else {
-            if (e.timestamp.includes('.')) {
-              timestamp = DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
-            } else {
-              timestamp = DateTime.fromFormat(e.timestamp, "dd LLLL yyyy, HH:mm").toISO()
+        const files = exportVersion > 1 ? e.Files : [e]
+        files.map( f => {
+          const matchCount = is_ios ? f.MatchCount : f.matchesCount
+          if (matchCount > 0) {
+            const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
+            if( !(hash in filtered_exposures) ) {
+              const keysInFileCount = is_ios ? f.RandomIDCount : f.KeyCount
+              filtered_exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
             }
           }
-          filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
-        }
+        })
+      })
+      exposures.map( e => {
+        const files = exportVersion > 1 ? e.Files : [e]
+        files.map( f => {
+          const matchCount = is_ios ? f.MatchCount : f.matchesCount
+          const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
+          if (matchCount > 0 || hash in filtered_exposures) {
+            let timestamp = null
+            if(is_ios) {
+              timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO()
+            } else {
+              if (e.timestamp.includes('.')) {
+                timestamp = DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
+              } else {
+                timestamp = DateTime.fromFormat(e.timestamp, "dd LLLL yyyy, HH:mm").toISO()
+              }
+            }
+            filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
+          }
+        })
       })
       Object.entries(filtered_exposures).map( ([hash, exp]) => {
         exp.matches = exp.matches.sort( (a,b) => {return a.timestamp > b.timestamp ? 1 : -1})
