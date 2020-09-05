@@ -65,7 +65,7 @@ export const diagnosisKeysSlice = createSlice({
           if (matchCount > 0) {
             const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
             if( !(hash in filtered_exposures) ) {
-              const keysInFileCount = is_ios ? f.RandomIDCount : f.KeyCount
+              const keysInFileCount = is_ios ? (exportVersion > 1 ? f.KeyCount : f.RandomIDCount) : f.keyCount
               filtered_exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
             }
           }
@@ -82,7 +82,7 @@ export const diagnosisKeysSlice = createSlice({
               timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO()
             } else {
               if (e.timestamp.includes('.')) {
-                timestamp = DateTime.fromFormat(e.timestamp, "dd. LLLL yyyy, HH:mm").toISO()
+                timestamp = DateTime.fromFormat(e.timestamp, "d. LLLL yyyy, HH:mm").toISO()
               } else {
                 timestamp = DateTime.fromFormat(e.timestamp, "d LLLL yyyy, HH:mm").toISO()
               }
