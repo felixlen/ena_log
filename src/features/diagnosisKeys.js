@@ -94,7 +94,11 @@ const DiagnosisKeys = () => {
                                             <tbody>
                                                 {
                                                     exposures[hash].matches.map( m => {
-                                                        const checkDate = DateTime.fromISO(m.timestamp).toLocaleString(DateTime.DATETIME_SHORT)
+                                                        const timestamp = DateTime.fromISO(m.timestamp)
+                                                        let checkDate = m.timestamp
+                                                        if (timestamp.isValid) {
+                                                            checkDate = timestamp.toLocaleString(DateTime.DATETIME_SHORT)
+                                                        }
                                                         return (
                                                             <tr>
                                                                 <td>{m.count}</td>
