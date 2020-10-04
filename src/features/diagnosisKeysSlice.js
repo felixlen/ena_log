@@ -79,16 +79,19 @@ export const diagnosisKeysSlice = createSlice({
           if (matchCount > 0 || hash in filtered_exposures) {
             let timestamp = null
             if(is_ios) {
-              timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ").toISO()
+              timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ")
             } else {
               if (e.timestamp.includes('.')) {
-                timestamp = DateTime.fromFormat(e.timestamp, "d. LLLL yyyy, HH:mm").toISO()
+                timestamp = DateTime.fromFormat(e.timestamp, "d. LLLL yyyy, HH:mm")
               } else {
-                timestamp = DateTime.fromFormat(e.timestamp, "d LLLL yyyy, HH:mm").toISO()
+                timestamp = DateTime.fromFormat(e.timestamp, "d LLLL yyyy, HH:mm")
               }
             }
             if (!timestamp.isValid) {
               timestamp = e.timestamp
+            }
+            else {
+              timestamp = timestamp.toISO()
             }
             filtered_exposures[hash].matches.push({timestamp: timestamp, count: matchCount})
           }
