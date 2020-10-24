@@ -60,13 +60,12 @@ const faq_entries = [
         'content': <div><h4>Bei iOS Geräten</h4>
             <ul>
                 <li>Einstellungen</li>
-                <li>Datenschutz</li>
-                <li>Health</li>
-                <li>COVID 19 Begegnungsaufzeichnungen</li>
+                <li>Begegnungsmitteilungen</li>
+                <li>Status von Begegnungsaufzeichnungen</li>
                 <li>Begegnungsüberprüfungen</li>
                 <li>Mit PIN oder FaceID authentifizieren</li>
                 <li>ganz nach unten scrollen</li>
-                <li>Begegnungsüberprüfungen exportieren</li>
+                <li>Überprüfungen exportieren</li>
             </ul>
             <h4>Bei Android Geräten</h4>
             <ul>
