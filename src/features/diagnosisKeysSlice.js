@@ -66,7 +66,18 @@ export const diagnosisKeysSlice = createSlice({
             const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
             if( !(hash in filtered_exposures) ) {
               const keysInFileCount = is_ios ? (exportVersion > 1 ? f.KeyCount : f.RandomIDCount) : f.keyCount
-              filtered_exposures[hash] = {date: state.keys[hash], keysInFileCount: keysInFileCount, matches: []}
+              const keys_filtered_by_hash = []
+              const keys_filtered_by_count = []
+              state.keys.map( el => {
+                if(el.hash === hash) {
+                  keys_filtered_by_hash.push(el.date)
+                }
+                if(el.keyCount === keysInFileCount) {
+                  keys_filtered_by_count.push(el.date)
+                }
+              })
+              const date = keys_filtered_by_hash.length > 0 ? keys_filtered_by_hash[0] : (keys_filtered_by_count.length > 0 ? keys_filtered_by_count[0] : null)
+              filtered_exposures[hash] = {date: date, keysInFileCount: keysInFileCount, matches: []}
             }
           }
         })
