@@ -31,9 +31,20 @@ const DiagnosisKeys = () => {
 
     const hashes_and_dates = []
     Object.keys(exposures).map( key => {
-        hashes_and_dates.push([key, exposures[key].date])
+        hashes_and_dates.push([key, exposures[key].date, exposures[key].probable_date])
     })
-    const sorted_hashes_and_dates = hashes_and_dates.sort( (a,b) => {return a[1] > b[1] ? 1 : -1})
+    const sorted_hashes_and_dates = hashes_and_dates.sort( (a,b) => {
+        if (a[1] !== null) {
+            if (b[1] === null) {
+                return a[1] > b[2] ? 1 : -1
+            }
+            return a[1] > b[1] ? 1 : -1
+        }
+        if (b[1] !== null) {
+            return a[2] > b[1] ? 1 : -1
+        }
+        return a[2] > b[2] ? 1 : -1
+    })
 
     if (status === 'loading' || status === 'uninitialized') {
         return (
@@ -79,11 +90,19 @@ const DiagnosisKeys = () => {
                     { enastatus === 'loaded' && sorted_hashes_and_dates.length > 0 &&
                         sorted_hashes_and_dates.map( hd => {
                             const hash = hd[0]
-                            const date = DateTime.fromISO(hd[1]).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                            let date_string = ""
+                            const date = DateTime.fromISO(hd[1])
+                            const probable_date = DateTime.fromISO(hd[2])
+                            if (date.isValid) {
+                                date_string = "vom " + date.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                            }
+                            else if (probable_date.isValid) {
+                                date_string = "wahrscheinlich vom " + probable_date.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)
+                            }
                             return (
                                 <Card className="mb-2">
                                     <Card.Header>
-                                        Schlüsseldatei vom {date} mit {exposures[hash].keysInFileCount} Schlüsseln
+                                        Schlüsseldatei {date_string} mit {exposures[hash].keysInFileCount} Schlüsseln
                                     </Card.Header>
                                     <Card.Body>
                                         <Table striped bordered size="sm">

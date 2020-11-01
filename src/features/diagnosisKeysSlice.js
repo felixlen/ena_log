@@ -28,6 +28,20 @@ const readENALog = createAsyncThunk(
   }
 )
 
+const parseDate = (date_string, is_ios) => {
+  let timestamp = null
+  if(is_ios) {
+    timestamp = DateTime.fromFormat(date_string, "yyyy-MM-dd HH:mm:ss ZZZ")
+  } else {
+    if (date_string.includes('.')) {
+      timestamp = DateTime.fromFormat(date_string, "d. LLLL yyyy, HH:mm")
+    } else {
+      timestamp = DateTime.fromFormat(date_string, "d LLLL yyyy, HH:mm")
+    }
+  }
+  return timestamp
+}
+
 export const diagnosisKeysSlice = createSlice({
   name: 'diagnosisKeys',
   initialState: {
@@ -60,7 +74,11 @@ export const diagnosisKeysSlice = createSlice({
       // rationale: also report 0 matches for a file where matches have been reported at another check instance
       exposures.map( e => {
         const files = exportVersion > 1 ? e.Files : [e]
+        let timestamp = parseDate(is_ios ? e.Timestamp : e.timestamp, is_ios)
         files.map( f => {
+          if (timestamp.isValid) {
+            timestamp = timestamp.plus({days: -1})
+          }
           const matchCount = is_ios ? f.MatchCount : f.matchesCount
           if (matchCount > 0) {
             const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
@@ -77,7 +95,11 @@ export const diagnosisKeysSlice = createSlice({
                 }
               })
               const date = keys_filtered_by_hash.length > 0 ? keys_filtered_by_hash[0] : (keys_filtered_by_count.length > 0 ? keys_filtered_by_count[0] : null)
-              filtered_exposures[hash] = {date: date, keysInFileCount: keysInFileCount, matches: []}
+              filtered_exposures[hash] = {
+                date: date,
+                probable_date: timestamp.toFormat('yyyy-MM-dd'),
+                keysInFileCount: keysInFileCount,
+                matches: []}
             }
           }
         })
@@ -88,16 +110,7 @@ export const diagnosisKeysSlice = createSlice({
           const matchCount = is_ios ? f.MatchCount : f.matchesCount
           const hash = is_ios ? f.Hash.toLowerCase() : Buffer.from(f.hash, 'base64').toString('hex').toLowerCase()
           if (matchCount > 0 || hash in filtered_exposures) {
-            let timestamp = null
-            if(is_ios) {
-              timestamp = DateTime.fromFormat(e.Timestamp, "yyyy-MM-dd HH:mm:ss ZZZ")
-            } else {
-              if (e.timestamp.includes('.')) {
-                timestamp = DateTime.fromFormat(e.timestamp, "d. LLLL yyyy, HH:mm")
-              } else {
-                timestamp = DateTime.fromFormat(e.timestamp, "d LLLL yyyy, HH:mm")
-              }
-            }
+            let timestamp = parseDate(is_ios ? e.Timestamp : e.timestamp, is_ios)
             if (!timestamp.isValid) {
               timestamp = e.timestamp
             }
