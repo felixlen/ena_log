@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Table from 'react-bootstrap/Table'
 import Card from 'react-bootstrap/Card'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchKeys, readENALog } from './diagnosisKeysSlice'
+import { fetchKeys, fetchKeysEUR, readENALog } from './diagnosisKeysSlice'
 import { useDropzone } from 'react-dropzone'
 import '../App.css'
 const { DateTime } = require("luxon");
@@ -14,6 +14,7 @@ const DiagnosisKeys = () => {
 
     const dispatch = useDispatch()
     const status = useSelector(state => state.diagnosisKeys.status)
+    const statusEUR = useSelector(state => state.diagnosisKeys.statusEUR)
     const enastatus = useSelector(state => state.diagnosisKeys.enastatus)
     const exposures = useSelector(state => state.diagnosisKeys.exposures)
 
@@ -27,6 +28,7 @@ const DiagnosisKeys = () => {
 
     useEffect( () => {
         dispatch(fetchKeys())
+        dispatch(fetchKeysEUR())
     }, [dispatch])
 
     const hashes_and_dates = []
@@ -46,7 +48,7 @@ const DiagnosisKeys = () => {
         return a[2] > b[2] ? 1 : -1
     })
 
-    if (status === 'loading' || status === 'uninitialized') {
+    if (status === 'loading' || status === 'uninitialized' || statusEUR === 'loading' || statusEUR === 'uninitialized') {
         return (
             <Row className="mt-2">
                 <Col>
@@ -57,7 +59,7 @@ const DiagnosisKeys = () => {
             </Row>
         )
     }
-    else if (status === 'error') {
+    else if (status === 'error' || statusEUR === 'error') {
         return (
             <Row className="mt-2">
                 <Col>

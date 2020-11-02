@@ -10,6 +10,14 @@ const fetchKeys = createAsyncThunk(
   }
 )
 
+const fetchKeysEUR = createAsyncThunk(
+  'fetchKeysEUR',
+  async () => {
+    const response = await axios.get('https://ctt.pfstr.de/json_EUR/filehashes.json')
+    return response.data
+  }
+)
+
 const readENALog = createAsyncThunk(
   'readENALog',
   async payload => {
@@ -47,6 +55,7 @@ export const diagnosisKeysSlice = createSlice({
   initialState: {
     keys: {},
     status: 'uninitialized',
+    statusEUR: 'uninitialized',
     enastatus: 'uninitialized',
     exposures: {}
   },
@@ -63,6 +72,12 @@ export const diagnosisKeysSlice = createSlice({
       state.keys = action.payload
     },
     [fetchKeys.rejected]: (state, action) => { state.status = 'error' },
+    [fetchKeysEUR.pending]: (state, action) => { state.statusEUR = 'loading' },
+    [fetchKeysEUR.fulfilled]: (state, action) => {
+      state.statusEUR = 'loaded'
+      state.keysEUR = action.payload
+    },
+    [fetchKeysEUR.rejected]: (state, action) => { state.statusEUR = 'error' },
     [readENALog.pending]: (state, action) => { state.enastatus = 'loading' },
     [readENALog.fulfilled]: (state, action) => {
       const payload_json = JSON.parse(action.payload)
@@ -86,7 +101,7 @@ export const diagnosisKeysSlice = createSlice({
               const keysInFileCount = is_ios ? (exportVersion > 1 ? f.KeyCount : f.RandomIDCount) : f.keyCount
               const keys_filtered_by_hash = []
               const keys_filtered_by_count = []
-              state.keys.map( el => {
+              state.keys.concat(state.keysEUR).map( el => {
                 if(el.hash === hash) {
                   keys_filtered_by_hash.push(el.date)
                 }
@@ -132,5 +147,5 @@ export const diagnosisKeysSlice = createSlice({
 })
 
 const { resetENA } = diagnosisKeysSlice.actions
-export { fetchKeys, readENALog, resetENA }
+export { fetchKeys, fetchKeysEUR, readENALog, resetENA }
 export default diagnosisKeysSlice.reducer
