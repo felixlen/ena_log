@@ -63,7 +63,7 @@ const faq_entries = [
                 <li>Begegnungsmitteilungen</li>
                 <li>Status von Begegnungsaufzeichnungen</li>
                 <li>Begegnungsüberprüfungen</li>
-                <li>Mit PIN oder FaceID authentifizieren</li>
+                <li>Mit FaceID, TouchID oder PIN authentifizieren</li>
                 <li>ganz nach unten scrollen</li>
                 <li>Überprüfungen exportieren</li>
             </ul>
