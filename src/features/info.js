@@ -56,6 +56,13 @@ const formatted_dummy_exposures = Object.keys(dummy_exposures).map( hash => {
 
 const faq_entries = [
     {
+        'title': 'Ich benutze ein iPhone und Version 1.9 (oder höher) der Corona-Warn App. Meine App zeigt Begegnungen an, diese Website zeigt aber keine Treffer an.',
+        'content': <div>
+            Mit Version 1.9.1 der Corona-Warn App wurde diese auf die <a href="https://www.coronawarn.app/de/blog/2020-12-17-risk-calculation-exposure-notification-framework-2-0/" target="_blank">neue Schnittstelle</a> von Apple und Google aktualisiert. <br/>
+            Diese Änderung hatte den Nebeneffekt das die Inforamtion, wie viele Treffer Sie hatten, sich nicht mehr in der Begegnungsüberprüfungsdatei befindet. Es wird momentan noch geprüft ob es sich hierbei um einen Bug handelt. Mehr Informationen finden Sie in <a href="https://github.com/corona-warn-app/cwa-app-ios/issues/1731" target="_blank">diesem GitHub Issue</a>.
+        </div>
+    },
+    {
         'title': 'Wo findet sich die Begegnungsüberprüfungsdatei?',
         'content': <div><h4>Bei iOS Geräten</h4>
             <ul>
