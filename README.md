@@ -1,6 +1,6 @@
 # Corona Exposure Notification Log File Analysis
 
-This is the source code of the react application that serves [Corona Exposure Notification Log Analysis](https://felixlen.github.io/ena_log/).
+This is the source code of the react application that was used to interpret log files of the Exposure Notification Framework. Since it is not actively maintained, the corresponding application and webpage has been removed.
 
 ## Acknowledgements
 
